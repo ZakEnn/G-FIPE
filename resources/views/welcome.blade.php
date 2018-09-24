@@ -65,27 +65,28 @@
         </style>
     </head>
     <body>
-
-        <div class="flex-center position-ref full-height" >
+    <div class="flex-center position-ref full-height" >
             @if (Route::has('login'))
-                <div class="top-right links "  >
+                <div class="top-right links" >
                     @auth
                         <a href="{{ url('/home') }} " style="color: #4dc0b5;">Home</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
+                        <a href="{{ route('login') }}" style="color:#062c33" >Login</a>
+                        <a href="{{ route('register') }}" style="color:#062c33;">Register</a>
                     @endauth
                 </div>
             @endif
             <div class="content">
-                <div class="title m-b-md" style="color: #1F2D3D" >
+                <div class="title" style="color: #17a2b8" >
                 Formation Douanes
                 </div>
-
+                <img src="img/formationPic.png" style="height: 20%">
                 <div class="links">
                     <a href="https://douane.gov.ma" style="color:#4dc0b5;">Douane.gov.ma</a>
                 </div>
+
             </div>
+
         </div>
     </body>
 </html>

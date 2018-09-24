@@ -98,8 +98,8 @@
                              <select name="type" v-model="form.function" class="form-control"
                                      :class="{'is-invalid':form.errors.has('function')}">
                                  <option value=""> Select Agent Function ... </option>
-                                 <option value="agent_std">Agent Standard </option>
-                                 <option value="rh">Ressources humaines</option>
+                                 <option value="Agent standard">Agent Standard </option>
+                                 <option value="Ressources humaines">Ressources humaines</option>
                                  <option value="Calcul et Statistiques">Calcul et Statistiques</option>
 
                              </select>
@@ -107,7 +107,7 @@
                          </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input v-model="form.password" type="text" name="password"
+                            <input v-model.lazy="form.password" type="text" name="password"
                                    placeholder="Password"
                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
                             <has-error :form="form" field="password"></has-error>

@@ -2,6 +2,7 @@
 import Formation from './components/Formation.vue';
 import Management from './components/Management.vue';
 import Dashboard from './components/Dashboard.vue';
+import Developer from './components/Developer.vue';
 import Sessions from './components/management/Sessions.vue';
 import Agents from './components/management/Agents.vue';
 import Tests from './components/management/Tests.vue';
@@ -15,6 +16,8 @@ export const routes = [
 
 
     {path:'/dashboard',component: Dashboard },
+
+    {path:'/developer',component: Developer },
 
     {path:'/management',component:Management,
 

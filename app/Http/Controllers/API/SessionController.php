@@ -38,8 +38,10 @@ class SessionController extends Controller
         ]);
         return Session::create([
             'libelle'=>$request['libelle'],
+            'description'=>$request['description'],
             'formation_id'=>$request['formation_id'],
             'date'=>$request['date'],
+            'heure'=>$request['heure'],
             'lieu'=>$request['lieu'],
             'nbr_participants'=>$request['nbr_participants'],
             'formatteur'=>$request['formatteur'],

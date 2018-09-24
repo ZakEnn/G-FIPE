@@ -14,26 +14,28 @@
                     <!-- /.card-header -->
                     <div class="card-body table-responsive ">
                         <table class="table table-hover">
-                            <tbody><tr>
+                            <tbody>
+                            <tr>
                                 <th>ID</th>
                                 <th>Libelle</th>
                                 <th>Formation Id</th>
                                 <th>Date</th>
+                                <th>Heure</th>
                                 <th>Lieu</th>
                                 <th>Formatteur</th>
                                 <th>Nbr participant</th>
-                                <th>Register</th>
                                 <th>Modify</th>
                             </tr>
+
                             <tr v-for="Session in Sessions" :key="Session.id">
                                 <td>{{Session.id}}</td>
                                 <td>{{Session.libelle}}</td>
                                 <td>{{Session.formation_id}}</td>
-                                <td><span class="tag tag-success">{{Session.date }}</span>
+                                <td><span class="tag tag-success">{{Session.date | myDate}}</span>
+                                <td><span class="tag tag-success">{{Session.heure| myTime }}</span></td>
                                 <td><span class="tag tag-success">{{Session.lieu}}</span></td>
                                 <td><span class="tag tag-success">{{Session.formatteur}}</span></td>
                                 <td><span class="tag tag-success">{{Session.nbr_participants}}</span></td>
-                                <td><span class="tag tag-success">{{Session.created_at | myDate }}</span></td>
                                 <td >
                                     <button @click="editModal(Session)"  class="btn btn-primary text-center ">Edit</button>
                                     <button @click="removeSession(Session.id)"  class="btn btn-danger text-center ">Remove</button>
@@ -57,7 +59,8 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title" v-show="!editMode"> Add Session </h4>
-                        <h4 class="modal-title" v-show="editMode"> Update Session </h4>                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" v-show="editMode"> Update Session </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
                     <form @submit.prevent="editMode ? updateSession(form.id) :createSession()">
@@ -78,6 +81,14 @@
                                     <has-error :form="form" field="libelle"></has-error>
                                 </div>
                                 <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea v-model="form.description" type="text" name="description"
+                                           placeholder="Description"
+                                           class="form-control" :class="{ 'is-invalid': form.errors.has('description') } ">
+                                    </textarea>
+                                    <has-error :form="form" field="description"></has-error>
+                                </div>
+                                <div class="form-group">
                                     <label>Formation</label>
                                     <select name="formation_id" v-model="form.formation_id" class="form-control"
                                             :class="{'is-invalid':form.errors.has('formation_id')}">
@@ -95,6 +106,13 @@
                                            placeholder="Date"
                                            class="form-control" :class="{ 'is-invalid': form.errors.has('date') }">
                                     <has-error :form="form" field="date"></has-error>
+                                </div>
+                                <div class="form-group">
+                                    <label>Heure</label>
+                                    <input v-model="form.heure" type="time" name="heure"
+                                           placeholder="Date"
+                                           class="form-control" :class="{ 'is-invalid': form.errors.has('heure') }">
+                                    <has-error :form="form" field="heure"></has-error>
                                 </div>
                                 <div class="form-group">
                                 <label>Lieu</label>
@@ -125,11 +143,12 @@
                                 </div>
                             </div>
 
+
                             <div class="modal-footer">
                                 <button  type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
                                 <button  v-show="editMode" type="submit"  class="btn btn-success" >Update</button>
-                                <button  v-show="!editMode" type="submit"  class="btn btn-success" >Create</button>                            </div>
-
+                                <button  v-show="!editMode" type="submit"  class="btn btn-success" >Create</button>
+                            </div>
                         </div>
                     </form>
 
@@ -156,8 +175,10 @@
                 form: new Form({
                     id:'',
                     libelle:'',
+                    description:'',
                     formation_id:'',
                     date:'',
+                    heure:'',
                     lieu:'',
                     formatteur:'',
                     nbr_participants:'',

@@ -17,21 +17,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <body class="hold-transition sidebar-mini">
 
 <div class="wrapper " id="app">
-    <div class="text-right img-thumbnail" style="background-color: white">
-        <img  height="78px" width="20%"  src="./img/logo_douane.gif"  alt="logo">
-        <img  height="78px" width="60%"  src="./img/image.png"   alt="image">
-    </div>
+
 
     <!-- Navbar -->
     <nav class="main-header navbar navbar-custom-menu bg-white navbar-light border-bottom " >
-        <!-- Left navbar links -->
-
+        <div class="img-thumbnail container-fluid" style="background-color: white">
+            <img  height="78px" width="20%"  src="./img/logo_d.png"  alt="logo">
+            <img  height="78px" width="75%"  src="./img/image.png"   alt="image">
+        </div>
         <ul class="navbar-nav" style="margin-bottom: 10px">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa"><img src="./img/menu1.png"></i></a>
             </li>
         </ul>
-        <p class="text-center breadcrumb bg-gray-light text-bold col-6" style="margin-top: 10px">Système de gestion de la formation intégrée au personnel de l'état</p>
+        <p class="text-center breadcrumb bg-gray-light text-bold " style="margin-top: 10px">Système de gestion de la formation intégrée au personnel de l'état</p>
         <!-- SEARCH FORM -->
         <form class="form-inline ml-3">
             <div class="input-group input-group-sm" style="margin-bottom: 10px">
@@ -74,28 +73,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <router-link to="/dashboard" class="nav-link">
+                        <router-link to="/dashboard" class="nav-link" active-class="active" exact>
                             <i class="nav-icon fa"> <img src="./img/dashboard.png" style="margin-right: 20px"></i>
                             <p>
                                 Dashboard
                             </p>
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link to="/developer" class="nav-link" active-class="active">
+                            <i class="nav-icon fa"> <img src="./img/devoloper.png" style="margin-right: 20px"></i>
+                            <p>
+                                Developer
+                            </p>
+                        </router-link>
+                    </li>
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
 
+
+                            <i class="nav-icon fa"> <img src="./img/book.png" style="margin-right: 20px"></i>
+                            <b class="text-center"> Formation </b>
                             <p>
-                                <i class="nav-icon fa"> <img src="./img/book.png" style="margin-right: 20px"></i>
-                                <b class="text-center"> Formation </b>
                                 <i class="right fa " >
-                                    <img src="./img/right-chevron.png" style="margin-top: 2px">
+                                    <img src="./img/right-chevron.png" style="margin-top: 2px;">
                                 </i>
                             </p>
+
                         </a>
                         <ul class="nav nav-treeview">
                             @foreach($formation as $theme)
-                            <li class="nav-item">
-                                <router-link  to="/formation/{{$theme->id}}" class="nav-link" >
+                            <li class="nav-item ">
+                                <router-link   to="/formation/{{$theme->id}}" active-class="active" class="nav-link" exact>
                                     <i class="fa" aria-hidden="true"></i>
                                     <p>{{$theme->libelle}}</p>
                                 </router-link>
@@ -105,10 +114,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </li>
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
-
+                            <i class="nav-icon fa"> <img src="./img/setting.png" style="margin-right: 20px"></i>
+                            <b class="text-center"> Management </b>
                             <p>
-                                <i class="nav-icon fa"> <img src="./img/setting.png" style="margin-right: 20px"></i>
-                                <b class="text-center"> Management </b>
                                 <i class="right fa " >
                                     <img src="./img/right-chevron.png" style="margin-top: 2px">
                                 </i>
@@ -117,26 +125,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <router-link to="/management/agents"
-                                             class="nav-link {{ Request::is('/management/agents') ? 'active' : '' }}" >
+                                             active-class="active"
+                                             class="nav-link" exact>
                                     <i class="fa" aria-hidden="true"></i>
                                     <p>Agents</p>
                                 </router-link>
                             </li>
                             <li class="nav-item">
                                 <router-link to="/management/formations"
-                                             class="nav-link {{ Request::is('/management/formations') ? 'active' : '' }}">
+                                             class="nav-link"
+                                             active-class="active">
                                     <i class="fa" aria-hidden="true"></i>
                                     <p>Formations</p>
                                 </router-link>
                             </li>
                             <li class="nav-item">
-                                <router-link to="/management/sessions" class="nav-link">
+                                <router-link  to="/management/sessions" class="nav-link" active-class="active">
                                     <i class="fa"></i>
                                     <p>Sessions</p>
                                 </router-link>
                             </li>
                             <li class="nav-item">
-                                <router-link to="/management/tests" class="nav-link" >
+                                <router-link   to="/management/tests" class="nav-link" active-class="active">
                                     <i class="fa"></i>
                                     <p>Tests</p>
                                 </router-link>

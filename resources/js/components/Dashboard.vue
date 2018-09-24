@@ -5,7 +5,7 @@
                 <span class="col-lg-6" v-for="session in sessions">
                     <div class="card card-warning">
                         <div class="card-header">
-                            <h5 class="m-0">Le : {{session.date}} A 9H00 <span class="float-right">  Durée : 2h</span></h5>
+                            <h5 class="m-0">Le : {{session.date |myDate}} A {{session.heure |myTime}} <span class="float-right">  Durée : 2h</span></h5>
                         </div>
                         <div class="card-body table-info">
                             <h7 class="card-title text-bold" style="color:#761b18" > Session : {{session.libelle}}</h7>
@@ -27,7 +27,7 @@
                                     <td><span class="text-bold" style="color:#002752;">Description </span></td>
                                     <td>
                                         <p class="card-text">
-                                            With supporting text below as a natural lead-in to additional content.
+                                            {{session.description}}
                                         </p>
                                     </td>
                                 </tr>
