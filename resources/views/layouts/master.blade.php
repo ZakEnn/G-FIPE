@@ -81,13 +81,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/developer" class="nav-link" active-class="active">
-                            <i class="nav-icon fa"> <img src="./img/devoloper.png" style="margin-right: 20px"></i>
+                        <router-link to="/myStore" class="nav-link" active-class="active" exact>
+                            <i class="nav-icon fa"> <img src="./img/store.png" style="margin-right: 20px"></i>
                             <p>
-                                Developer
+                                Store
                             </p>
                         </router-link>
                     </li>
+                    {{--<li class="nav-item">--}}
+                        {{--<router-link to="/developer" class="nav-link" active-class="active">--}}
+                            {{--<i class="nav-icon fa"> <img src="./img/devoloper.png" style="margin-right: 20px"></i>--}}
+                            {{--<p>--}}
+                                {{--Developer--}}
+                            {{--</p>--}}
+                        {{--</router-link>--}}
+                    {{--</li>--}}
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
 
@@ -112,6 +120,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             @endforeach
                         </ul>
                     </li>
+
+            @if(Auth::user()->hasType('admin'))
+
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa"> <img src="./img/setting.png" style="margin-right: 20px"></i>
@@ -153,6 +164,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </li>
                         </ul>
                     </li>
+              @endif
+
                     <li class="nav-item">
 
                         <a class="nav-link" href="{{ route('logout') }}"
@@ -180,7 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         <div class="content">
             <div class="container-fluid">
-                <router-view></router-view>
+                <router-view :auth_user="'{{ auth()->user()?? null }}'"></router-view>
                 <vue-progress-bar></vue-progress-bar>
             </div>
         </div>

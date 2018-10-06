@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Session extends Model
 {
-    protected $fillable = ['libelle','description','date','heure','lieu','formatteur','nbr_participants','formation_id'];
-
+    protected $fillable = ['id','libelle','description','date','heure','duree','lieu','formateur','nbr_participants','formation_id'];
 
 
     public function formation(){
@@ -15,7 +14,7 @@ class Session extends Model
     }
 
     public function participants(){
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withPivot('etat','presence');
     }
 
 }

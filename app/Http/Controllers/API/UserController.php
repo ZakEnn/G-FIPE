@@ -99,9 +99,16 @@ class UserController extends Controller
         return User::findOrFail($id)->delete();
     }
 
-    public function formatteurs()
+    public function formateurs()
     {
         return User::whereType('instructor')->get();
+    }
+
+    public function sessionsParticipation($id){
+       $sessions =  User::findOrFail($id)->sessions()->get();
+        return $sessions;
+
+
     }
 
 }

@@ -22,8 +22,9 @@
                                 <th>Date</th>
                                 <th>Heure</th>
                                 <th>Lieu</th>
-                                <th>Formatteur</th>
+                                <th>Formateur</th>
                                 <th>Nbr participant</th>
+                                <th>Participants</th>
                                 <th>Modify</th>
                             </tr>
 
@@ -34,9 +35,13 @@
                                 <td><span class="tag tag-success">{{Session.date | myDate}}</span>
                                 <td><span class="tag tag-success">{{Session.heure| myTime }}</span></td>
                                 <td><span class="tag tag-success">{{Session.lieu}}</span></td>
-                                <td><span class="tag tag-success">{{Session.formatteur}}</span></td>
+                                <td><span class="tag tag-success">{{Session.formateur}}</span></td>
                                 <td><span class="tag tag-success">{{Session.nbr_participants}}</span></td>
-                                <td >
+                                <td>
+                                    <button @click="sessionParticipants(Session.id)"  class="btn btn-outline-secondary text-center ">P</button>
+                                </td>
+
+                                <td>
                                     <button @click="editModal(Session)"  class="btn btn-primary text-center ">Edit</button>
                                     <button @click="removeSession(Session.id)"  class="btn btn-danger text-center ">Remove</button>
                                 </td>
@@ -110,9 +115,16 @@
                                 <div class="form-group">
                                     <label>Heure</label>
                                     <input v-model="form.heure" type="time" name="heure"
-                                           placeholder="Date"
+                                           placeholder="Heure"
                                            class="form-control" :class="{ 'is-invalid': form.errors.has('heure') }">
                                     <has-error :form="form" field="heure"></has-error>
+                                </div>
+                                <div class="form-group">
+                                    <label>Duree</label>
+                                    <input v-model="form.duree" type="time" name="duree"
+                                           placeholder="Duree"
+                                           class="form-control" :class="{ 'is-invalid': form.errors.has('duree') }">
+                                    <has-error :form="form" field="duree"></has-error>
                                 </div>
                                 <div class="form-group">
                                 <label>Lieu</label>
@@ -122,13 +134,12 @@
                                     <has-error :form="form" field="lieu"></has-error>
                                  </div>
 
-
                                 <div class="form-group">
-                                    <label>Formatteur</label>
-                                    <select name="formatteur" v-model="form.formatteur" class="form-control"
-                                            :class="{'is-invalid':form.errors.has('formatteur')}">
+                                    <label>Formateur</label>
+                                    <select name="formateur" v-model="form.formateur" class="form-control"
+                                            :class="{'is-invalid':form.errors.has('formateur')}">
                                         <option value=""> Select session Function ... </option>
-                                        <option :value="f.name" v-for="f in formatteurs" :key="f.id">
+                                        <option :value="f.name" v-for="f in formateurs" :key="f.id">
                                            {{f.name}}
                                         </option>
                                     </select>
@@ -156,22 +167,77 @@
             </div>
         </div>
 
+
+        <div class="modal fade" id="showParticipants"  role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" style="width:50%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Participants</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-responsive form-group">
+                            <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Function</th>
+                                <th>Etat</th>
+                                <th>Presence</th>
+                                <th>Decision</th>
+                            </tr>
+                            <tr v-for="participant in participants" >
+                                <td>{{participant.name}}</td>
+                                <td>{{participant.email}}</td>
+                                <td>{{participant.function}}</td>
+                                <td>{{participant.pivot.etat?(participant.pivot.etat == 1)?'refusée':'accéptée':'en attente'}}</td>
+                                <td><input type="checkbox"
+                                           @change="participantPresent(participant.id,$event)"
+                                           checked="participantPresent(participant.id,$event)"
+                                           class="form-control" >
+                                </td>
+
+                                <td>
+                                    <button @click="acceptParticipant(participant.id)"
+                                            class="btn btn-success text-center ">
+                                        Approve
+                                    </button>
+
+                                    <button @click="removeParticipant(participant.id)"
+                                                     class="btn btn-danger text-center "
+                                               >
+                                         Decline
+                                     </button>
+                                </td>
+
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script>
     import axios from "axios";
-    import Datepicker from 'vuejs-datepicker';
+    import {Form} from "vform";
+
     export default {
-        components:{
-          Datepicker,
-        },
         data(){
             return{
                 editMode: false,
                 formations:{},
-                formatteurs:[],
+                formateurs:[],
+                participants:[],
                 Sessions:{},
+                session_id:'',
                 form: new Form({
                     id:'',
                     libelle:'',
@@ -179,13 +245,16 @@
                     formation_id:'',
                     date:'',
                     heure:'',
+                    duree:'',
                     lieu:'',
-                    formatteur:'',
+                    formateur:'',
                     nbr_participants:'',
                 }),
 
             }
         },
+
+        props:['auth_user'],
 
         methods:{
 
@@ -204,7 +273,6 @@
             createSession(){
                 this.$Progress.start();
                 this.form.post('/blog/public/api/session').then((data)=>{
-                    console.log(data);
                     Fire.$emit('session_created');
                     $('#addNew').modal('hide');
                     toast({
@@ -256,14 +324,56 @@
                         this.$Progress.finish();
                     })
                     .catch(()=> this.$Progress.fail());
+            },
+            sessionParticipants(id){
+                $('#showParticipants').modal('show');
+                 axios.get("/blog/public/api/participants/session/"+id).then(( data ) => {
+                     this.participants = data.data;
+                     this.session_id = id;
+                 });
+
+            },
+
+            removeParticipant(id) {
+                axios.get("/blog/public/api/session/declineParticipant/"+this.session_id+"/"+id).then(( ) => {
+                    this.sessionParticipants(this.session_id);
+                });
+
+                toast({
+                    type: 'success',
+                    title: 'Demand has been rejected'
+                });
+            },
 
 
+            acceptParticipant(id){
+                 axios.get("/blog/public/api/session/approveParticipant/"+this.session_id+"/"+id).then(( ) => {
+                     this.sessionParticipants(this.session_id);
+                });
+                toast({
+                    type: 'success',
+                    title: 'Demand has been approved'
+                });
+            },
+
+            participantPresent(id,event){
+                if (event.target.checked){
+                    axios.get("/blog/public/api/session/presenceParticipant/"+this.session_id+"/"+id).then(( ) => {
+                        this.sessionParticipants(this.session_id);
+
+                    });
+                }
+                toast({
+                    type: 'success',
+                    title: 'Participant presence checked'
+                });
             }
+
         },
         created(){
             axios.get("/blog/public/api/formation").then(({ data }) =>(this.formations = data.data));
-            axios.get("/blog/public/api/user/formatteurs").then(({ data }) => {
-                this.formatteurs = data;
+            axios.get("/blog/public/api/user/formateurs").then(({ data }) => {
+                this.formateurs = data;
             });
             this.loadSessions();
             Fire.$on('session_created', () => { this.loadSessions();})
@@ -271,7 +381,7 @@
             Fire.$on('session_updated', () => { this.loadSessions();})
 
             console.log('Component mounted');
-        }
+        },
 
     }
 </script>
@@ -279,4 +389,5 @@
 <style scoped>
 
 </style>
+
 

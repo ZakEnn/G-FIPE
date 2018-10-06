@@ -21,6 +21,7 @@
                                 <th>Type</th>
                                 <th>Fonction</th>
                                 <th>Register</th>
+                                <th>Sessions</th>
                                 <th>Modify</th>
                             </tr>
                             <tr v-for="user in users" :key="user.id">
@@ -30,17 +31,52 @@
                                 <td><span class="tag tag-success">{{user.type}}</span>
                                 <td><span class="tag tag-success">{{user.function}}</span></td>
                                 <td><span class="tag tag-success">{{user.created_at | myDate }}</span></td>
+                                <td>
+                                    <button @click="loadSessions(user.id)"  class="btn btn-outline-secondary text-center ">S</button>
+                                </td>
                                 <td >
                                         <button @click="editModal(user)"  class="btn btn-primary text-center ">Edit</button>
                                         <button @click="removeUser(user.id)"  class="btn btn-danger text-center ">Remove</button>
                                 </td>
                             </tr>
-
-
                             </tbody>
                         </table>
                     </div>
+                </div>
                     <!-- /.card-body -->
+                <div class="modal fade" id="showSessions"  tabindex="-1" role="dialog"
+                      aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Session</h3>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Libelle</th>
+                                        <th>Date</th>
+                                        <th>Heure</th>
+                                        <th>Formateur</th>
+
+                                    </tr>
+                                    <tr v-for="session in sessions" :key="session.id">
+                                        <td>{{session.id}}</td>
+                                        <td>{{session.libelle}}</td>
+                                        <td>{{session.date}}</td>
+                                        <td>{{session.heure}}</td>
+                                        <td>{{session.formateur}}</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.card -->
             </div>
@@ -98,16 +134,21 @@
                              <select name="type" v-model="form.function" class="form-control"
                                      :class="{'is-invalid':form.errors.has('function')}">
                                  <option value=""> Select Agent Function ... </option>
-                                 <option value="Agent standard">Agent Standard </option>
-                                 <option value="Ressources humaines">Ressources humaines</option>
-                                 <option value="Calcul et Statistiques">Calcul et Statistiques</option>
-
+                                 <option value="Agent standard">Agent standard </option>
+                                 <option value="Declarant en douane">Declarant en douane </option>
+                                 <option value="Responsable du service de transit">Responsable du service de transit</option>
+                                 <option value="Agent de transit et de transport international">Agent de transit et de transport international</option>
+                                 <option value="Secretaire de transit">Secretaire de transit</option>
+                                 <option value="Secretaire d'import/Export">Secretaire d'import/Export</option>
+                                 <option value="Agent de fret aerien et maritime">Agent de fret aerien et maritime</option>
+                                 <option value="Agent de service commerciale">Agent de service commerciale</option>
+                                 <option value="Agent d'exploitation">Agent d'exploitation</option>
                              </select>
                              <has-error :form="form" field="function"></has-error>
                          </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input v-model.lazy="form.password" type="text" name="password"
+                            <input v-model.lazy="form.password" type="password" name="password"
                                    placeholder="Password"
                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
                             <has-error :form="form" field="password"></has-error>
@@ -137,6 +178,7 @@
             return{
                 editMode: false,
                 users:{},
+                sessions:{},
                 form: new Form({
                     id:'',
                     name:'',
@@ -145,7 +187,6 @@
                     type:'',
                     function:'',
                 }),
-
             }
         },
 
@@ -196,6 +237,14 @@
             loadUsers(){
                 axios.get("/blog/public/api/user").then(({ data }) =>(this.users = data.data));
             },
+            loadSessions(id){
+                $('#showSessions').modal('show');
+                axios.get("/blog/public/api/user/sessions/"+id).then(( data ) => {
+                    console.log(data);
+                    this.sessions = data.data;
+                });
+            },
+
             removeUser: function (id) {
                 swal({
                     title: 'Are you sure?',

@@ -28,7 +28,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function hasType($type)
+    {
+        return $this->type == $type;
+    }
+
     public function sessions(){
-        return $this->belongsToMany('App\Session');
+        return $this->belongsToMany('App\Session')->withPivot('etat','presence');
     }
 }

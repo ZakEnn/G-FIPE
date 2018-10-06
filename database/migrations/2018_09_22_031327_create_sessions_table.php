@@ -21,8 +21,9 @@ class CreateSessionsTable extends Migration
             //dateTime to display the hour !!
             $table->date('date');
             $table->time('heure');
+            $table->time('duree');
             $table->string('lieu');
-            $table->string('formatteur');
+            $table->string('formateur');
             $table->integer('nbr_participants');
             $table->timestamps();
 

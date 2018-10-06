@@ -9,6 +9,10 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import moment from 'moment';
+
+import {store} from './store/store';
+
+
 import {Form, HasError, AlertError} from 'vform';
 
 window.Form = Form;
@@ -19,6 +23,7 @@ import VueRouter from 'vue-router';
 import {routes} from './routes.js';
 // ES6 Modules or TypeScript
 import swal from 'sweetalert2';
+import StarRating from 'vue-star-rating';
 
 // CommonJS
 window.swal = swal;
@@ -31,6 +36,9 @@ const toast = swal.mixin({
 });
 
 window.toast = toast;
+
+export const EventBus = new Vue();
+
 
 window.Fire = new Vue();
 
@@ -46,13 +54,22 @@ Vue.use(VueProgressBar, {
 
 Vue.use(VueRouter);
 
-const router = new VueRouter({
+export const router = new VueRouter({
     routes,
     mode: 'history'
 });
 
 Vue.filter('myDate',function (created) {
     return moment(created).format("DD/MM/YY");
+});
+
+Vue.filter('formatTime', function(value) {
+    if (value) {
+        const parts = value.split(":");
+        return +parts[0] + "h " + +parts[1] + "m";
+    } else {
+        return "unknown"
+    }
 });
 
 Vue.filter('myTime',function (created) {
@@ -79,9 +96,12 @@ Vue.component(
     require('./components/passport/PersonalAccessTokens.vue')
 );
 
-const app = new Vue({
+Vue.component('star-rating',StarRating);
+Vue.component('InscriptionState', require('./components/buttons/InscriptionState.vue'));
 
+const app = new Vue({
     router,
+    store,
     el: '#app',
 
 });
