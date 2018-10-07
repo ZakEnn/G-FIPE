@@ -187,17 +187,16 @@
                                 <th>Presence</th>
                                 <th>Decision</th>
                             </tr>
-                            <tr v-for="participant in participants" >
+                            <tr v-for="(participant,index) in participants" >
                                 <td>{{participant.name}}</td>
                                 <td>{{participant.email}}</td>
                                 <td>{{participant.function}}</td>
                                 <td>{{participant.pivot.etat?(participant.pivot.etat == 1)?'refusée':'accéptée':'en attente'}}</td>
                                 <td><input type="checkbox"
                                            @change="participantPresent(participant.id,$event)"
-                                           checked="participantPresent(participant.id,$event)"
+                                           :checked="presence[index]"
                                            class="form-control" >
                                 </td>
-
                                 <td>
                                     <button @click="acceptParticipant(participant.id)"
                                             class="btn btn-success text-center ">
@@ -210,8 +209,6 @@
                                          Decline
                                      </button>
                                 </td>
-
-
                             </tr>
 
                             </tbody>
@@ -238,6 +235,7 @@
                 participants:[],
                 Sessions:{},
                 session_id:'',
+                presence:[],
                 form: new Form({
                     id:'',
                     libelle:'',
@@ -314,7 +312,6 @@
                 //console.log('editing data');
                 this.form.put("/blog/public/api/session/"+id)
                     .then((data) => {
-                        console.log(data);
                         Fire.$emit('session_updated');
                         $('#addNew').modal('hide');
                         toast({
@@ -327,9 +324,21 @@
             },
             sessionParticipants(id){
                 $('#showParticipants').modal('show');
+                 this.presence=[];
+
                  axios.get("/blog/public/api/participants/session/"+id).then(( data ) => {
                      this.participants = data.data;
                      this.session_id = id;
+
+                     for(let $i=0;$i<this.participants.length;$i++) {
+
+                             if(this.participants[$i].pivot.presence==1){
+                                 this.presence.push(true);
+                             }else{
+                                 this.presence.push(false);
+                             }
+
+                     }
                  });
 
             },
@@ -362,11 +371,21 @@
                         this.sessionParticipants(this.session_id);
 
                     });
+                    toast({
+                        type: 'success',
+                        title: 'Participant presence checked'
+                    });
+                }else{
+                    axios.get("/blog/public/api/session/absenceParticipant/"+this.session_id+"/"+id).then(( ) => {
+                        this.sessionParticipants(this.session_id);
+
+                    });
+                    toast({
+                        type: 'success',
+                        title: 'Participant presence unchecked'
+                    });
                 }
-                toast({
-                    type: 'success',
-                    title: 'Participant presence checked'
-                });
+
             }
 
         },
@@ -375,7 +394,10 @@
             axios.get("/blog/public/api/user/formateurs").then(({ data }) => {
                 this.formateurs = data;
             });
+
             this.loadSessions();
+
+
             Fire.$on('session_created', () => { this.loadSessions();})
             Fire.$on('session_removed', () => { this.loadSessions();})
             Fire.$on('session_updated', () => { this.loadSessions();})

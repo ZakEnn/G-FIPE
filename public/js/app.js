@@ -70980,7 +70980,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -71219,9 +71219,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -71235,6 +71232,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             participants: [],
             Sessions: {},
             session_id: '',
+            presence: [],
             form: new __WEBPACK_IMPORTED_MODULE_1_vform__["Form"]({
                 id: '',
                 libelle: '',
@@ -71313,7 +71311,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$Progress.start();
             //console.log('editing data');
             this.form.put("/blog/public/api/session/" + id).then(function (data) {
-                console.log(data);
                 Fire.$emit('session_updated');
                 $('#addNew').modal('hide');
                 toast({
@@ -71329,9 +71326,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             $('#showParticipants').modal('show');
+            this.presence = [];
+
             __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get("/blog/public/api/participants/session/" + id).then(function (data) {
                 _this3.participants = data.data;
                 _this3.session_id = id;
+
+                for (var $i = 0; $i < _this3.participants.length; $i++) {
+
+                    if (_this3.participants[$i].pivot.presence == 1) {
+                        _this3.presence.push(true);
+                    } else {
+                        _this3.presence.push(false);
+                    }
+                }
             });
         },
         removeParticipant: function removeParticipant(id) {
@@ -71364,11 +71372,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get("/blog/public/api/session/presenceParticipant/" + this.session_id + "/" + id).then(function () {
                     _this6.sessionParticipants(_this6.session_id);
                 });
+                toast({
+                    type: 'success',
+                    title: 'Participant presence checked'
+                });
+            } else {
+                __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get("/blog/public/api/session/absenceParticipant/" + this.session_id + "/" + id).then(function () {
+                    _this6.sessionParticipants(_this6.session_id);
+                });
+                toast({
+                    type: 'success',
+                    title: 'Participant presence unchecked'
+                });
             }
-            toast({
-                type: 'success',
-                title: 'Participant presence checked'
-            });
         }
     },
     created: function created() {
@@ -71383,7 +71399,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             _this7.formateurs = data;
         });
+
         this.loadSessions();
+
         Fire.$on('session_created', function () {
             _this7.loadSessions();
         });
@@ -72157,7 +72175,7 @@ var render = function() {
                       [
                         _vm._m(2),
                         _vm._v(" "),
-                        _vm._l(_vm.participants, function(participant) {
+                        _vm._l(_vm.participants, function(participant, index) {
                           return _c("tr", [
                             _c("td", [_vm._v(_vm._s(participant.name))]),
                             _vm._v(" "),
@@ -72180,11 +72198,8 @@ var render = function() {
                             _c("td", [
                               _c("input", {
                                 staticClass: "form-control",
-                                attrs: {
-                                  type: "checkbox",
-                                  checked:
-                                    "participantPresent(participant.id,$event)"
-                                },
+                                attrs: { type: "checkbox" },
+                                domProps: { checked: _vm.presence[index] },
                                 on: {
                                   change: function($event) {
                                     _vm.participantPresent(

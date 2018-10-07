@@ -22,6 +22,7 @@ Route::get('session/participants/{session}/{user}' , 'API\SessionController@addP
 Route::get('session/declineParticipant/{session}/{user}' , 'API\SessionController@removeParticipantSession');
 Route::get('session/approveParticipant/{session}/{user}' , 'API\SessionController@approveParticipantSession');
 Route::get('session/presenceParticipant/{session}/{user}' , 'API\SessionController@presenceParticipantSession');
+Route::get('session/absenceParticipant/{session}/{user}' , 'API\SessionController@absenceParticipantSession');
 
 Route::post('rating/{user}/{session}','API\SessionController@ratingSession');
 

@@ -80,12 +80,6 @@ class SessionController extends Controller
     {
         $session = Session::findOrFail($id);
 
-//        $this->validate($request,[
-//            'name' => 'required|string|max:191',
-//            'email' => 'required|string|email|max:191',
-//            'password' => 'required|string|min:6',
-//
-//        ]);
         $session->update($request->all());
 
         return "updated";
@@ -118,8 +112,6 @@ class SessionController extends Controller
 
     public function removeParticipantSession($id,$u_id){
 
-     //  Session::findOrFail($id)->participants()->detach($u_id);
-
         $participant =  Session::findOrFail($id)->participants()->whereUserId($u_id)->get()->first();
         $participant->pivot->etat = 1 ;
         $participant->pivot->save();
@@ -127,8 +119,6 @@ class SessionController extends Controller
 
     }
     public function approveParticipantSession($id,$u_id){
-
-        //  Session::findOrFail($id)->participants()->detach($u_id);
 
         $participant =  Session::findOrFail($id)->participants()->whereUserId($u_id)->get()->first();
         $participant->pivot->etat = 2 ;
@@ -138,14 +128,21 @@ class SessionController extends Controller
     }
     public function presenceParticipantSession($id,$u_id){
 
-        //  Session::findOrFail($id)->participants()->detach($u_id);
-
         $participant =  Session::findOrFail($id)->participants()->whereUserId($u_id)->get()->first();
         $participant->pivot->presence = 1 ;
         $participant->pivot->save();
         return true;
 
     }
+    public function absenceParticipantSession($id,$u_id){
+
+        $participant =  Session::findOrFail($id)->participants()->whereUserId($u_id)->get()->first();
+        $participant->pivot->presence = 0 ;
+        $participant->pivot->save();
+        return true;
+
+    }
+
     public function sessionsParticipant($id){
 
         $participants =  Session::findOrFail($id)->participants()->get();
