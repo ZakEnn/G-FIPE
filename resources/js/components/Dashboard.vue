@@ -10,11 +10,11 @@
                         <div class="card-body table-info">
                             <h6 class="card-title text-bold" style="color:#761b18" > Session : {{session.libelle}}</h6>
                             <hr>
-                            <table class="table">
+                            <table class="table table-responsive">
                                   <tr>
                                     <td><span class="text-bold" style="color:#002752;">Formation </span></td>
                                     <td> {{session.formation.libelle}}</td>
-                                </tr>
+                                  </tr>
                                   <tr>
                                     <td><span class="text-bold" style="color:#002752;">Lieu </span></td>
                                     <td>{{session.lieu}}</td>

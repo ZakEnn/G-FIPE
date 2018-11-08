@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('type')->default('participant');
+            $table->string('type')->default('participant');//'admin' pour avoir un acces global
             $table->string('function')->default('agent');
             $table->rememberToken();
             $table->timestamps();

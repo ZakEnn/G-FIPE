@@ -25,6 +25,7 @@
                                 <th>Formateur</th>
                                 <th>Nbr participant</th>
                                 <th>Participants</th>
+                                <th>Rating</th>
                                 <th>Modify</th>
                             </tr>
 
@@ -40,7 +41,9 @@
                                 <td>
                                     <button @click="sessionParticipants(Session.id)"  class="btn btn-outline-secondary text-center ">P</button>
                                 </td>
-
+                                <td>
+                                    <button @click="sessionRating(Session.id)"  class="btn btn-outline-secondary text-center ">R</button>
+                                </td>
                                 <td>
                                     <button @click="editModal(Session)"  class="btn btn-primary text-center ">Edit</button>
                                     <button @click="removeSession(Session.id)"  class="btn btn-danger text-center ">Remove</button>
@@ -136,13 +139,11 @@
 
                                 <div class="form-group">
                                     <label>Formateur</label>
-                                    <select name="formateur" v-model="form.formateur" class="form-control"
-                                            :class="{'is-invalid':form.errors.has('formateur')}">
-                                        <option value=""> Select session Function ... </option>
-                                        <option :value="f.name" v-for="f in formateurs" :key="f.id">
-                                           {{f.name}}
-                                        </option>
-                                    </select>
+                                    <input name="formateur" type="text"
+                                           v-model="form.formateur" class="form-control"
+                                           placeholder="Formateur name"
+                                           :class="{'is-invalid':form.errors.has('formateur')}">
+
                                     <has-error :form="form" field="function"></has-error>
                                 </div>
                                 <div class="form-group">
@@ -219,6 +220,51 @@
             </div>
         </div>
 
+        <!--displaying the rating-->
+
+        <div class="modal fade" id="showRating"  role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" style="width:50%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Session Rating</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-responsive">
+                            <tr>
+                                <td class="text-center">
+                                    <span style="font-size:50px" class="text-bold">{{ratingSession}}</span>
+                                  </td>
+                                <td>
+                                    <span class="text-bold row " style="color:#002752;">
+                                      <span>&nbsp 5 &nbsp<div class="usersRate float-right" ><div class="usersRate" style="background-color:#2fa360 " :style="{width:widthRate.five}"></div></div></span> <br>
+                                      <span>&nbsp 4 &nbsp<div class="usersRate float-right" ><div class="usersRate" style="background-color: greenyellow" :style="{width:widthRate.four}"></div></div></span> <br>
+                                      <span>&nbsp 3 &nbsp <div class="usersRate float-right" ><div class="usersRate" style="background-color: yellow" :style="{width:widthRate.three}"></div></div></span> <br>
+                                      <span>&nbsp 2 &nbsp <div class="usersRate float-right" ><div class="usersRate" style="background-color: darkorange " :style="{width:widthRate.two}"></div></div></span> <br>
+                                      <span >&nbsp 1 &nbsp<div class="usersRate float-right" ><div class="usersRate" style="background-color: orangered" :style="{width:widthRate.one}"></div></div></span>
+                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>   <star-rating v-model="ratingSession"
+                                                    readOnly="true"
+                                                    borderWidth="3"
+                                                    increment="0.01"
+                                >
+                                </star-rating></td>
+                                <td class="text-center text-bold">Number of Votes :{{nbrRatings}}</td>
+                            </tr>
+                        </table>
+                        <hr>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -233,9 +279,18 @@
                 formations:{},
                 formateurs:[],
                 participants:[],
+                ratingSession:null,
                 Sessions:{},
                 session_id:'',
                 presence:[],
+                widthRate:{
+                  one:'0px',
+                  two:'0px',
+                  three:'0px',
+                  four:'0px',
+                  five:'0px'
+                },
+                nbrRatings:0,
                 form: new Form({
                     id:'',
                     libelle:'',
@@ -342,7 +397,59 @@
                  });
 
             },
+            sessionRating(id){
+                $('#showRating').modal('show');
+                this.widthRate.one = '0px';
+                this.widthRate.two = '0px';
+                this.widthRate.three = '0px';
+                this.widthRate.four = '0px';
+                this.widthRate.five = '0px';
 
+                this.nbrRatings = 0;
+
+                axios.get("/blog/public/api/session/rating/"+id).then(( data ) => {
+                    let $ratings = data.data;
+                    this.session_id = id;
+                    let $result = 0;
+                    let $compteur1 =0;
+                    let $compteur2 =0;
+                    let $compteur3 =0;
+                    let $compteur4 =0;
+                    let $compteur5 =0;
+
+                    for(let $i=0;$i<$ratings.length;$i++){
+                        $result += $ratings[$i].rating;
+                        if ($ratings[$i].rating <= 1 ) {
+                            $compteur1++;
+                        }else if ($ratings[$i].rating <= 2){
+                            $compteur2++;
+                        } else if ($ratings[$i].rating <= 3){
+                            $compteur3++;
+                        }else if ($ratings[$i].rating <= 4){
+                            $compteur4++;
+                        }else {
+                            $compteur5++;
+                        }
+                    }
+                    this.ratingSession = ($result/$ratings.length).toFixed(1);
+                    this.nbrRatings = $ratings.length;
+                    this.widthRate.one = (($compteur1/$ratings.length)*220)+'px';
+                    this.widthRate.two = (($compteur2/$ratings.length)*220)+'px';
+                    this.widthRate.three = (($compteur3/$ratings.length)*220)+'px';
+                    this.widthRate.four = (($compteur4/$ratings.length)*220)+'px';
+                    this.widthRate.five = (($compteur5/$ratings.length)*220)+'px';
+
+                    console.log('rateOne'+this.widthRate.one);
+                    console.log('rateTwo'+this.widthRate.two);
+                    console.log('rate3'+this.widthRate.three);
+                    console.log('rate4'+this.widthRate.four);
+                    console.log('rate5'+this.widthRate.five);
+                    console.log(data.data);
+                    console.log('checkRate-'+$result);
+                   // this.participants = data.data;
+
+                });
+            },
             removeParticipant(id) {
                 axios.get("/blog/public/api/session/declineParticipant/"+this.session_id+"/"+id).then(( ) => {
                     this.sessionParticipants(this.session_id);
@@ -409,7 +516,11 @@
 </script>
 
 <style scoped>
-
+.usersRate{
+    width: 220px;
+    height: 15px;
+    background-color: lightgrey;
+}
 </style>
 
 

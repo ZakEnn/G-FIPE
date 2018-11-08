@@ -7,8 +7,8 @@
                         <div class="card-header">
                             <h5 class="m-0">Le : {{session.date |myDate}} A {{session.heure |myTime}} <span class="float-right">  Durée :  {{session.duree |formatTime}}</span></h5>
                         </div>
-                        <div class="card-body">
-                            <table class="table table-bordered">
+                        <div class="card-body table-bordered">
+                            <table class="table  table-responsive ">
                                 <tr>
                                     <td><span class="text-bold" style="color:#002752;">Session </span></td>
                                     <td>{{session.libelle}}</td>
@@ -33,20 +33,21 @@
                          <hr>
 
                          <InscriptionState :session_id="session.id" :auth_user="auth_user"></InscriptionState>
-
-                            <div v-if="presence[index]">
-                                <div class="row">
+                            <hr>
+                            <div v-if="presence[index] && !ratedSession.includes(session.id)">
+                                <div class="row" >
                                     <div class="col-md-4" style=" margin-top:7%">
-                                        <h5 class="text-bold float-right">Rating :</h5>
+                                        <h5 class="text-bold " style="color:#002752;">Donnez votre note sur cette session:</h5>
                                     </div>
                                     <div class="col-md-5">
                                         <br>
-                                        <star-rating v-model="rating[index]"
-                                                     :increment=0.5
-                                                     text-class="custom-text">
-                                        </star-rating>
+                                          <star-rating v-model="rating[index]"
+                                                       :increment=0.5
+                                                       text-class="custom-text"
+                                          >
+                                          </star-rating>
                                         <br>
-                                        <button @click="setRating(session.id,rating,index)" class="btn btn-primary">Publish</button>
+                                        <button @click="setRating(session.id,rating,index)" class="btn btn-primary">Valider</button>
                                     </div>
                                 </div>
                             </div>
@@ -69,6 +70,7 @@
                 sessions:{},
                 rating:[],
                 presence:[],
+                ratedSession:[],
             }
         },
 
@@ -84,29 +86,70 @@
                 });
             },
 
+            setRating(s_id,rating,index){
+                swal({
+                    title: 'êtes-vous sûr de votre vote ?',
+                    text: "veuillez confirmer !",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, je confirme!'
+                }).then((result) => {
+                    if (result.value) {
+
+                        axios.post("/blog/public/api/session/participantRating/"+s_id+"/"+JSON.parse(this.auth_user)["id"],
+                            {'rating':this.rating[index]}).then(( data ) => {
+                            console.log(data);
+                            this.loadVoted();
+                        });
+
+                        swal(
+                            'Transmis!',
+                            'Votre vote est envoyé.',
+                            'success'
+                        )
+                    }
+                })
+
+            },
+            loadVoted(){
+                axios.get("/blog/public/api/user/rating/"+JSON.parse(this.auth_user)["id"]).then(( data ) => {
+                    let $ratings = data.data;
+
+                    for (let $i = 0; $i < $ratings.length; $i++) {
+                        let $sessionId = $ratings[$i].session_id;
+                        this.ratedSession.push($sessionId);
+                    }
+                    console.log( this.ratedSession);
+                });
+            }
+
+
         },
 
         created(){
 
             axios.get("/blog/public/api/user/sessions/"+JSON.parse(this.auth_user)["id"])
-                .then(({data}) =>{this.$data.sessions = data;
-
-                for(let $i=0;$i<Object.keys(this.sessions).length;$i++){
-                        axios.get("/blog/public/api/checkingPresence/"+JSON.parse(this.auth_user)["id"]+"/"+this.sessions[$i].id).then(( data ) => {
-                            console.log('presence'+data.data.pivot.presence);
-                            if(data.data.pivot.presence==1){
+                .then(({data}) =>{
+                    this.presence = [];
+                    this.$data.sessions = data;
+                    for(let $i=0;$i<Object.keys(this.sessions).length;$i++){
+                            console.log('presence'+this.$data.sessions[$i].pivot.presence);
+                            if(this.$data.sessions[$i].pivot.presence == 1){
                                 this.presence.push(true);
                             }else{
                                 this.presence.push(false);
                             }
-                        });
                     }
                 });
 
+            this.loadVoted();
 
         },
 
     }
+
 </script>
 
 <style scoped>

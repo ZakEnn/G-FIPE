@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Rating;
 use App\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -150,13 +151,10 @@ class SessionController extends Controller
 
     }
 
-    /*public function ratingSession($user,$s_id,Request $request){
-        $userInfo=User::findOrFail($user)->sessions();
-        $userInfo->update(["user_id"=>$user,"session_id"=>$s_id,"etat"=>$request->rating]);
+    public function ratingParticipantSession($s_id,$u_id,Request $request){
 
-        return $request->rating;
-
-    }*/
+        return Rating::create(['user_id'=>$u_id,'session_id'=>$s_id,'rating'=>$request->rating]);
+    }
 
     public function checkingSessionAndParticipant($user_id, $session_id){
 
@@ -164,6 +162,11 @@ class SessionController extends Controller
         $participants =  Session::findOrFail($session_id)->participants();
        return  $participants->findOrFail($user_id);
 
+    }
+
+    public function ratingSession($session_id){
+        $ratingSession = Rating::whereSessionId($session_id)->get();
+       return $ratingSession;
     }
 
 }

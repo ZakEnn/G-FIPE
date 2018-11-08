@@ -67,7 +67,7 @@
                                         <td>{{session.id}}</td>
                                         <td>{{session.libelle}}</td>
                                         <td>{{session.date}}</td>
-                                        <td>{{session.heure}}</td>
+                                        <td>{{session.heure | myTime}}</td>
                                         <td>{{session.formateur}}</td>
                                     </tr>
 
@@ -162,7 +162,8 @@
                 </div>
 
               </div>
-                </form>
+
+             </form>
 
             </div>
         </div>

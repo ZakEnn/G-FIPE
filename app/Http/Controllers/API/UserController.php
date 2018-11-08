@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Rating;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,10 +21,9 @@ class UserController extends Controller
         $this->middleware('auth:api');
     }
 
-
     public function index()
     {
-        return User::latest()->paginate(10);
+        return User::orderBy('name', 'ASC')->paginate(10);
     }
 
     /**
@@ -77,7 +77,7 @@ class UserController extends Controller
             'name' => 'required|string|max:191',
             'email' => 'required|string|email|max:191|unique:users,email,'.$user->id,
             'password' => 'sometimes|string|min:6',
-
+q
         ]);
 
         if (!empty($request->password)){
@@ -108,7 +108,12 @@ class UserController extends Controller
        $sessions =  User::findOrFail($id)->sessions()->get();
         return $sessions;
 
+    }
 
+
+    public function ratingOfUser($user_id){
+        $ratingUser = Rating::whereUserId($user_id)->get();
+        return $ratingUser;
     }
 
 }

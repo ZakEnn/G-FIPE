@@ -30,13 +30,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa"><img src="./img/menu1.png"></i></a>
             </li>
         </ul>
-        <p class="text-center breadcrumb bg-gray-light text-bold " style="margin-top: 10px">Système de gestion de la formation intégrée au personnel de l'état</p>
+        <p class="text-center breadcrumb bg-gray-light text-bold " style="margin-top:0.8%">Système de gestion de la formation intégrée au personnel de l'état</p>
         <!-- SEARCH FORM -->
         <form class="form-inline ml-3">
             <div class="input-group input-group-sm" style="margin-bottom: 10px">
                 <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
+                    <button disabled="true" class="btn btn-navbar" type="submit">
                         <i class="fa">
                             <img src="./img/search.png" height="10px">
                         </i>
@@ -44,14 +44,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
             </div>
         </form>
-
  </nav>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link">
+        <a href="#" class="brand-link">
             <img src="./img/formation.png" alt="Formation Logo"  height="60px" class="img-circle elevation-1"
                  style="opacity: .8">
             <span class="brand-text font-weight-light" style="padding-left: 30px">G-FIPE</span>
@@ -63,12 +62,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
                 <div class="info">
-                    <a href="#" class="d-block">{{Auth::user()->name}}</a>
+                    <a href="#" class="d-block" >{{Auth::user()->name}}</a>
                 </div>
             </div>
 
             <!-- Sidebar Menu -->
-            <nav class="mt-2">
+            <nav class="mt-2" >
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
@@ -88,14 +87,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </p>
                         </router-link>
                     </li>
-                    {{--<li class="nav-item">--}}
-                        {{--<router-link to="/developer" class="nav-link" active-class="active">--}}
-                            {{--<i class="nav-icon fa"> <img src="./img/devoloper.png" style="margin-right: 20px"></i>--}}
-                            {{--<p>--}}
-                                {{--Developer--}}
-                            {{--</p>--}}
-                        {{--</router-link>--}}
-                    {{--</li>--}}
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
 

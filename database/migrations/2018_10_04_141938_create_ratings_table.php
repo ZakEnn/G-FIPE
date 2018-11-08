@@ -20,6 +20,7 @@ class CreateRatingsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->double('rating')->default(0);
+            $table->unique(array('session_id', 'user_id'));
             $table->timestamps();
         });
     }
@@ -29,6 +30,7 @@ class CreateRatingsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
         Schema::dropIfExists('ratings');

@@ -23,8 +23,11 @@ Route::get('session/declineParticipant/{session}/{user}' , 'API\SessionControlle
 Route::get('session/approveParticipant/{session}/{user}' , 'API\SessionController@approveParticipantSession');
 Route::get('session/presenceParticipant/{session}/{user}' , 'API\SessionController@presenceParticipantSession');
 Route::get('session/absenceParticipant/{session}/{user}' , 'API\SessionController@absenceParticipantSession');
+Route::post('session/participantRating/{session}/{user}' , 'API\SessionController@ratingParticipantSession');
 
-Route::post('rating/{user}/{session}','API\SessionController@ratingSession');
+Route::get('session/rating/{session}','API\SessionController@ratingSession');
+Route::get('user/rating/{user}','API\UserController@ratingOfUser');
+
 
 Route::get('user/sessions/{id}' , 'API\UserController@sessionsParticipation');
 Route::get('user/formateurs' , 'API\UserController@formateurs');

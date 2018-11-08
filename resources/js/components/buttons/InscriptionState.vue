@@ -30,7 +30,6 @@
     export default {
         data(){
             return {
-
                 state:false,
                 sessid:[],
                 etat: null,
@@ -50,12 +49,31 @@
                 });
             },
             inscription(s_id){
-                this.sessid.push(s_id);
-                this.state = true;
-                axios.get("/blog/public/api/session/participants/"+s_id+"/"+JSON.parse(this.auth_user)["id"]).then(( data ) => {
-                    console.log(data);
-                    this.checking() ;
-                });
+                swal({
+                    title: 'êtes-vous sûr de vouloir s\'inscrire ?',
+                    text: "veuillez confirmer votre demande !",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, je confirme!'
+                }).then((result) => {
+                    if (result.value) {
+
+                        axios.get("/blog/public/api/session/participants/"+s_id+"/"+JSON.parse(this.auth_user)["id"]).then(( data ) => {
+                            console.log(data);
+                            this.checking() ;
+                        });
+
+                        swal(
+                            'Transmis!',
+                            'Votre demande est envoyé.',
+                            'success'
+                        )
+                    }
+                })
+
+
 
             }
         },
